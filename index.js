@@ -1,10 +1,10 @@
+
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const express = require('express');
 const cors =require('cors');
 const app = express();
 require('dotenv').config()
 const port = process.env.PORT || 5000;
-const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
-
 
 
 app.use(cors());
@@ -34,31 +34,33 @@ async function run() {
 
     const artCollection = client.db('artDB').collection('art');
 
-
     app.get('/art', async (req, res) => {
-      try {
-          const cursor = artCollection.find({});
-          const result = await cursor.toArray();
-          res.send([result]);
-          
-      } catch (error) {
-          console.error(error);
-          res.status(500).send('Failed to fetch art');
-      }
-  });
+        const cursor = artCollection.find();
+        const result = await cursor.toArray();
+        res.send(result);
+    })
 
       
   
-
+    app.post('/art', async (req, res) => {
+        const newArt = req.body;
+        console.log(newArt);
+        const result = await artCollection.insertOne(newArt);
+        
+        console.log(result);
+        res.send(result);
+    });
 
 
     app.get("/singleArt/:id",async(req,res)=>{
         
         const result = await artCollection.findOne({_id: new ObjectId(req.params.id),}); 
+        console.log(result)
         res.send(result)
     });
 
     app.put("/updateArt/:id", async (req, res) => {
+        console.log(req.params.id)
         const query = { _id:new ObjectId(req.params.id) };
         const data = {
             $set:{
@@ -73,20 +75,18 @@ async function run() {
                  stockStatus:req.body.stockStatus,
             }
         }
-        const result =await artCollection.updateOne(query,data);
+        const result =artCollection.updateOne(query,data);
+        console.log(result);
         res.send(result)
     })
-
-    app.post('/art', async (req, res) => {
-      const newArt = req.body;
-      const result = await artCollection.insertOne(newArt);
-      
-      res.send(result);
-  });
  
+
+
+
 
       app.delete('/delete/:id', async (req, res) => {
         const result =await artCollection.deleteOne({_id:new ObjectId(req.params.id)});
+        console.log(result);
         res.send(result)
     });
 

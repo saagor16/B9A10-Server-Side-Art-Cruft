@@ -46,7 +46,6 @@ async function run() {
         console.log(newArt);
         const result = await artCollection.insertOne(newArt);
         
-        console.log(result);
         res.send(result);
     });
 
@@ -54,12 +53,10 @@ async function run() {
     app.get("/singleArt/:id",async(req,res)=>{
         
         const result = await artCollection.findOne({_id: new ObjectId(req.params.id),}); 
-        console.log(result)
         res.send(result)
     });
 
     app.put("/updateArt/:id", async (req, res) => {
-        console.log(req.params.id)
         const query = { _id:new ObjectId(req.params.id) };
         const data = {
             $set:{
@@ -75,7 +72,6 @@ async function run() {
             }
         }
         const result =artCollection.updateOne(query,data);
-        console.log(result);
         res.send(result)
     })
  
@@ -85,7 +81,6 @@ async function run() {
 
       app.delete('/delete/:id', async (req, res) => {
         const result =await artCollection.deleteOne({_id:new ObjectId(req.params.id)});
-        console.log(result);
         res.send(result)
     });
 

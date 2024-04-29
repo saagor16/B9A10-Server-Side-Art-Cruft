@@ -58,13 +58,32 @@ async function run() {
         res.send(result)
     });
 
+    app.put("/updateArt/:id", async (req, res) => {
+        console.log(req.params.id)
+        const query = { _id:new ObjectId(req.params.id) };
+        const data = {
+            $set:{
+                itemName:req.body.itemName,
+                 imageUrl:req.body.imageUrl,
+                 subcategoryName:req.body.subcategoryName,
+                processingTime:req.body.processingTime,
+                 description:req.body.description,
+                 price:req.body.price,
+              rating:req.body.rating,
+                customization:req.body.customization,
+                 stockStatus:req.body.stockStatus,
+            }
+        }
+        const result =artCollection.updateOne(query,data);
+        console.log(result);
+        res.send(result)
+    })
  
- 
 
 
 
 
-
+  
 
 
 

@@ -39,6 +39,18 @@ async function run() {
         res.send(result);
     })
 
+      
+  
+    app.post('/art', async (req, res) => {
+        const newArt = req.body;
+        console.log(newArt);
+        const result = await artCollection.insertOne(newArt);
+        
+        console.log(result);
+        res.send(result);
+    });
+
+
 
 
 

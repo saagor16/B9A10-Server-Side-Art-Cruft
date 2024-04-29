@@ -51,6 +51,19 @@ async function run() {
     });
 
 
+    app.get("/singleArt/:id",async(req,res)=>{
+        
+        const result = await artCollection.findOne({_id: new ObjectId(req.params.id),}); 
+        console.log(result)
+        res.send(result)
+    });
+
+ 
+ 
+
+
+
+
 
 
 

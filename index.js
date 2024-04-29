@@ -33,21 +33,22 @@ async function run() {
 
     const artCollection = client.db('artDB').collection('art');
 
+
     app.get('/art', async (req, res) => {
-        const cursor = artCollection.find();
-        const result = await cursor.toArray();
-        res.send(result);
-    })
+      try {
+          const cursor = artCollection.find({});
+          const result = await cursor.toArray();
+          res.send([result]);
+          
+      } catch (error) {
+          console.error(error);
+          res.status(500).send('Failed to fetch art');
+      }
+  });
 
       
   
-    app.post('/art', async (req, res) => {
-        const newArt = req.body;
-        console.log(newArt);
-        const result = await artCollection.insertOne(newArt);
-        
-        res.send(result);
-    });
+
 
 
     app.get("/singleArt/:id",async(req,res)=>{
@@ -71,13 +72,17 @@ async function run() {
                  stockStatus:req.body.stockStatus,
             }
         }
-        const result =artCollection.updateOne(query,data);
+        const result =await artCollection.updateOne(query,data);
         res.send(result)
     })
+
+    app.post('/art', async (req, res) => {
+      const newArt = req.body;
+      const result = await artCollection.insertOne(newArt);
+      
+      res.send(result);
+  });
  
-
-
-
 
       app.delete('/delete/:id', async (req, res) => {
         const result =await artCollection.deleteOne({_id:new ObjectId(req.params.id)});
